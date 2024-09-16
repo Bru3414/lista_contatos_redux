@@ -1,9 +1,15 @@
-import Cadastro from '../../components/Cadastro'
+import CardEditaCadastra from '../../components/CardEditaCadastra'
 
 const NovoContato = () => (
   <div className="body">
     <div className="container-body">
-      <Cadastro />
+      <CardEditaCadastra
+        nome=""
+        email=""
+        telefone=""
+        estaEditando={true}
+        id={0}
+      />
     </div>
   </div>
 )
