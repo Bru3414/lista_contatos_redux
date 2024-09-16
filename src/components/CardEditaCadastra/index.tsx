@@ -5,7 +5,7 @@ import * as Yup from 'yup'
 import InputMask from 'react-input-mask'
 
 import Botao from '../Botao'
-import * as S from './styles'
+import * as S from '../../styles'
 import telefoneImg from '../../images/telefone.png'
 import nomeImg from '../../images/sombra-de-usuario-masculino.png'
 import emailImg from '../../images/o-email.png'
@@ -86,7 +86,11 @@ const CardEditaCadastra = ({
   }
 
   return (
-    <S.Card onSubmit={form.handleSubmit} className="container">
+    <S.Card
+      tipo="editaCadastra"
+      onSubmit={form.handleSubmit}
+      className="container"
+    >
       <S.Dados>
         <img src={nomeImg} alt="" />
         <input
