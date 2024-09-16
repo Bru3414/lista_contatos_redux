@@ -70,7 +70,7 @@ const CardEditaCadastra = ({
     if (id > 0) {
       form.values.nome = nomeOriginal
       form.values.telefone = telefoneOriginal
-      form.values.nome = nomeOriginal
+      form.values.email = emailOriginal
       dispath(isEdit(id))
     } else {
       navigate('/')
