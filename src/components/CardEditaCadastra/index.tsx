@@ -65,7 +65,11 @@ const CardEditaCadastra = ({
   }, [isSuccess, isSuccessAlterar])
 
   const checkNome = (): boolean => {
-    const item = itens.find((i) => i.nome == form.values.nome && i.id != id)
+    const item = itens.find(
+      (i) =>
+        i.nome.toLowerCase().trim() == form.values.nome.toLowerCase().trim() &&
+        i.id != id
+    )
 
     if (item) {
       return true
