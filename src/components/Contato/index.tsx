@@ -10,13 +10,15 @@ import * as S from '../../styles'
 import telefoneImg from '../../images/telefone.png'
 import { remover, isEdit } from '../../store/reducers/contatos'
 import CardEditaCadastra from '../CardEditaCadastra'
-import Nome from './styles'
+import Nome, { Card } from './styles'
+import { useExcluirMutation } from '../../services/api'
 
 type Props = ContatoClass
 
 const Contato = ({ nome, email, telefone, id, estaEditando }: Props) => {
   const [editando, setEditando] = useState(false)
   const dispath = useDispatch()
+  const [excluir, { isSuccess, isLoading }] = useExcluirMutation()
 
   const preventDefault = (e: FormEvent) => {
     e.preventDefault()
@@ -26,8 +28,19 @@ const Contato = ({ nome, email, telefone, id, estaEditando }: Props) => {
     setEditando(estaEditando as boolean)
   }, [estaEditando])
 
+  useEffect(() => {
+    if (isSuccess) {
+      dispath(remover(id))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess])
+
   const editar = () => {
     dispath(isEdit(id))
+  }
+
+  const removerContato = (id: number) => {
+    excluir(id)
   }
 
   return (
@@ -41,7 +54,7 @@ const Contato = ({ nome, email, telefone, id, estaEditando }: Props) => {
           estaEditando={editando}
         />
       ) : (
-        <S.Card onSubmit={preventDefault} tipo="normal" className="container">
+        <Card onSubmit={preventDefault} tipo="normal" className="container">
           <Nome>
             <img src={nomeImg} alt="" />
             {nome}
@@ -62,12 +75,16 @@ const Contato = ({ nome, email, telefone, id, estaEditando }: Props) => {
           <S.BotoesDiv>
             <Botao onClick={() => editar()} texto="EDITAR" tipo="editar" />
             <Botao
-              onClick={() => dispath(remover(id))}
-              texto="EXCLUIR"
+              onClick={() => {
+                if (!isLoading) {
+                  removerContato(id)
+                }
+              }}
+              texto={isLoading ? '...' : 'EXCLUIR'}
               tipo="excluir"
             />
           </S.BotoesDiv>
-        </S.Card>
+        </Card>
       )}
     </>
   )

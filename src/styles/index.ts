@@ -58,7 +58,7 @@ const EstiloGlobal = createGlobalStyle`
   }
   }
 
-.card {
+/* .card {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
@@ -78,7 +78,7 @@ const EstiloGlobal = createGlobalStyle`
     margin-right: 8px;
     align-content: center;
   }
-}
+} */
 
 
 .card-dados{
@@ -111,42 +111,6 @@ const EstiloGlobal = createGlobalStyle`
 
 }
 
-`
-
-type Props = {
-  tipo: 'normal' | 'editaCadastra'
-}
-
-export const Card = styled.form<Props>`
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  row-gap: 8px;
-  padding-bottom: 8px;
-  border-radius: 8px;
-  ${(props) =>
-    props.tipo === 'normal'
-      ? `padding: 4px;
-  background-image: linear-gradient(
-    45deg,
-    ${variaveis.rosa},
-    ${variaveis.amarelo}
-  );`
-      : `padding: 8px 4px 4px;
-  border: 3px solid ${variaveis.verdeClaro};
-  background-color: ${variaveis.branco};`}
-
-  img {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-    align-content: center;
-  }
-
-  small {
-    margin-left: 24px;
-    color: ${variaveis.vermelho};
-  }
 `
 
 export const Dados = styled.div`

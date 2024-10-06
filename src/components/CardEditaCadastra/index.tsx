@@ -1,9 +1,10 @@
 import { useFormik } from 'formik'
-import { useDispatch } from 'react-redux'
-import { cadastrar, editar, isEdit } from '../../store/reducers/contatos'
+import { useDispatch, useSelector } from 'react-redux'
+import { cadastrarStore, editar, isEdit } from '../../store/reducers/contatos'
 import * as Yup from 'yup'
 import InputMask from 'react-input-mask'
 
+import { Card } from '../Contato/styles'
 import Botao from '../Botao'
 import * as S from '../../styles'
 import telefoneImg from '../../images/telefone.png'
@@ -11,6 +12,13 @@ import nomeImg from '../../images/sombra-de-usuario-masculino.png'
 import emailImg from '../../images/o-email.png'
 import ContatoClass from '../../models/Contato'
 import { useNavigate } from 'react-router-dom'
+import {
+  ContatoBD,
+  useAlterarMutation,
+  useCadastrarMutation
+} from '../../services/api'
+import { useEffect } from 'react'
+import { RootReducer } from '../../store'
 
 type Props = ContatoClass
 
@@ -22,9 +30,26 @@ const CardEditaCadastra = ({
 }: Props) => {
   const navigate = useNavigate()
   const dispath = useDispatch()
+  const [cadastrar, { data, isSuccess, isLoading }] = useCadastrarMutation()
+  const { itens } = useSelector((state: RootReducer) => state.contatos)
+  const [
+    alterar,
+    { isSuccess: isSuccessAlterar, isLoading: isLoadingAlterar }
+  ] = useAlterarMutation()
 
-  const salvarEdicao = () => {
-    if (id > 0) {
+  useEffect(() => {
+    if (isSuccess && data) {
+      const cbd: ContatoBD = {
+        id: data.id,
+        nome: data.nome,
+        telefone: data.telefone,
+        email: data.email
+      }
+      dispath(cadastrarStore(cbd))
+      navigate('/')
+    }
+
+    if (isSuccessAlterar && id > 0) {
       dispath(
         editar({
           nome: form.values.nome,
@@ -34,18 +59,39 @@ const CardEditaCadastra = ({
           estaEditando: true
         })
       )
-    } else {
-      dispath(
-        cadastrar({
+      dispath(isEdit(id))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, isSuccessAlterar])
+
+  const checkNome = (): boolean => {
+    const item = itens.find((i) => i.nome == form.values.nome && i.id != id)
+
+    if (item) {
+      return true
+    }
+    return false
+  }
+
+  const salvarEdicao = () => {
+    if (!checkNome() && !isLoadingAlterar) {
+      if (id > 0) {
+        alterar({
           nome: form.values.nome,
           telefone: form.values.telefone,
           email: form.values.email,
-          estaEditando: false
+          id
         })
-      )
-      navigate('/')
+      } else if (!isLoading) {
+        cadastrar({
+          nome: form.values.nome,
+          telefone: form.values.telefone,
+          email: form.values.email
+        })
+      }
+    } else {
+      alert('Contato com este nome já existe')
     }
-    dispath(isEdit(id))
   }
 
   const form = useFormik({
@@ -57,9 +103,13 @@ const CardEditaCadastra = ({
     validationSchema: Yup.object({
       email: Yup.string()
         .email('E-mail inválido')
-        .required('Campo obrigatório'),
-      telefone: Yup.string().min(1).required('Campo obrigatório'),
-      nome: Yup.string().min(3, 'Nome inválido').required('Campo obrigatório')
+        .required('Campo obrigatório')
+        .max(50),
+      telefone: Yup.string().min(1).max(20).required('Campo obrigatório'),
+      nome: Yup.string()
+        .min(3, 'Nome inválido')
+        .max(50)
+        .required('Campo obrigatório')
     }),
     onSubmit: () => {
       salvarEdicao()
@@ -67,13 +117,15 @@ const CardEditaCadastra = ({
   })
 
   const cancelarEdicao = () => {
-    if (id > 0) {
-      form.values.nome = nomeOriginal
-      form.values.telefone = telefoneOriginal
-      form.values.email = emailOriginal
-      dispath(isEdit(id))
-    } else {
-      navigate('/')
+    if (!isLoading && !isLoadingAlterar) {
+      if (id > 0) {
+        form.values.nome = nomeOriginal
+        form.values.telefone = telefoneOriginal
+        form.values.email = emailOriginal
+        dispath(isEdit(id))
+      } else {
+        navigate('/')
+      }
     }
   }
 
@@ -86,7 +138,7 @@ const CardEditaCadastra = ({
   }
 
   return (
-    <S.Card
+    <Card
       tipo="editaCadastra"
       onSubmit={form.handleSubmit}
       className="container"
@@ -125,14 +177,17 @@ const CardEditaCadastra = ({
       </S.Dados>
       <small>{getErrorMessage('email', form.errors.email)}</small>
       <S.BotoesDiv>
-        <Botao texto="SALVAR" tipo="editar" />
+        <Botao
+          texto={isLoading || isLoadingAlterar ? '...' : 'SALVAR'}
+          tipo="editar"
+        />
         <Botao
           onClick={() => cancelarEdicao()}
           texto="CANCELAR"
           tipo="excluir"
         />
       </S.BotoesDiv>
-    </S.Card>
+    </Card>
   )
 }
 
