@@ -41,9 +41,9 @@ const CardEditaCadastra = ({
     if (isSuccess && data) {
       const cbd: ContatoBD = {
         id: data.id,
-        nome: data.nome,
+        nome: data.nome.trim(),
         telefone: data.telefone,
-        email: data.email
+        email: data.email.trim()
       }
       dispath(cadastrarStore(cbd))
       navigate('/')
@@ -52,9 +52,9 @@ const CardEditaCadastra = ({
     if (isSuccessAlterar && id > 0) {
       dispath(
         editar({
-          nome: form.values.nome,
+          nome: form.values.nome.trim(),
           telefone: form.values.telefone,
-          email: form.values.email,
+          email: form.values.email.trim(),
           id,
           estaEditando: true
         })
@@ -81,16 +81,16 @@ const CardEditaCadastra = ({
     if (!checkNome() && !isLoadingAlterar) {
       if (id > 0) {
         alterar({
-          nome: form.values.nome,
+          nome: form.values.nome.trim(),
           telefone: form.values.telefone,
-          email: form.values.email,
+          email: form.values.email.trim(),
           id
         })
       } else if (!isLoading) {
         cadastrar({
-          nome: form.values.nome,
+          nome: form.values.nome.trim(),
           telefone: form.values.telefone,
-          email: form.values.email
+          email: form.values.email.trim()
         })
       }
     } else {
