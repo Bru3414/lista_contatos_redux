@@ -15,7 +15,7 @@ export type ContatoBD = {
 
 const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: 'API-1367700493.us-east-2.elb.amazonaws.com'
+    baseUrl: 'https://lista-contatos.bru3414.com'
   }),
   tagTypes: ['contatos'],
   endpoints: (builder) => ({
