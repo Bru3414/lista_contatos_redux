@@ -15,7 +15,7 @@ export type ContatoBD = {
 
 const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://3.129.128.97:8080'
+    baseUrl: 'https://3.129.128.97:8080'
   }),
   tagTypes: ['contatos'],
   endpoints: (builder) => ({
