@@ -108,11 +108,13 @@ const CardEditaCadastra = ({
       email: Yup.string()
         .email('E-mail inválido')
         .required('Campo obrigatório')
-        .max(50),
-      telefone: Yup.string().min(15).max(15).required('Campo obrigatório'),
+        .max(50, 'E-mail muito grande'),
+      telefone: Yup.string()
+        .min(15, 'Telefone inválido')
+        .required('Campo obrigatório'),
       nome: Yup.string()
         .min(3, 'Nome inválido')
-        .max(50)
+        .max(50, 'Nome muito grande')
         .required('Campo obrigatório')
     }),
     onSubmit: () => {
