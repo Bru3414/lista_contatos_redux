@@ -109,7 +109,7 @@ const CardEditaCadastra = ({
         .email('E-mail inválido')
         .required('Campo obrigatório')
         .max(50),
-      telefone: Yup.string().min(1).max(20).required('Campo obrigatório'),
+      telefone: Yup.string().min(15).max(15).required('Campo obrigatório'),
       nome: Yup.string()
         .min(3, 'Nome inválido')
         .max(50)
@@ -161,6 +161,7 @@ const CardEditaCadastra = ({
       <S.Dados>
         <img src={telefoneImg} alt="" />
         <InputMask
+          maskChar=""
           mask="(99) 99999-9999"
           value={form.values.telefone}
           name="telefone"
